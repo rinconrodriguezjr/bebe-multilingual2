@@ -198,57 +198,94 @@ function DVDPage() {
 
   */
  
-  import React from "react";
-  import { useParams, useNavigate } from "react-router-dom";
-  import { videoData } from "../data/videoData";
-  import "../styles/dvd.css";
+  import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { videoData } from "../data/videoData";
+import "../styles/dvd.css";
 
-  const DVDPage = () => {
-    const { id } = useParams();
-    const navigate = useNavigate(); // Hook para navegar programáticamente
-    const dvd = videoData.find((item) => item.id === parseInt(id));
+const DVDPage = () => {
+  const { id } = useParams();
+  const navigate = useNavigate(); // Hook para navegar programáticamente
+  const dvd = videoData.find((item) => item.id === parseInt(id));
   
-    if (!dvd) {
-      return <h1>DVD no encontrado</h1>;
+  // Si no se encuentra el DVD, mostramos un mensaje de error
+  if (!dvd) {
+    return <h1>DVD no encontrado</h1>;
+  }
+
+  // Estado para los checkboxes
+  const [checkedVideos, setCheckedVideos] = useState([]);
+
+  // Recuperar el estado de los checkboxes desde el localStorage al cargar el componente
+  useEffect(() => {
+    const savedCheckedVideos = JSON.parse(localStorage.getItem(`dvd-${id}-checked`)) || [];
+    setCheckedVideos(savedCheckedVideos);
+  }, [id]);
+
+  // Función para manejar el cambio de estado de un checkbox
+  const handleCheckboxChange = (index) => {
+    const updatedCheckedVideos = [...checkedVideos];
+    if (updatedCheckedVideos.includes(index)) {
+      updatedCheckedVideos.splice(updatedCheckedVideos.indexOf(index), 1); // Desmarcar
+    } else {
+      updatedCheckedVideos.push(index); // Marcar
     }
-  
-    // Función para regresar a la página anterior (lista de DVDs)
-    const goBack = () => {
-      navigate("/");
-    };
-  
-    return (
-      <div className="container mt-4">
-        {/* Botón de regreso */}
-        <button
-          onClick={goBack}
-          className="btn btn-primary mb-4"
-        >
-          Regresar a menu principal
-        </button>
-  
-        <h1 className="text-center mb-4">{dvd.title}</h1>
-  
-        <div className="row">
-          {dvd.videos.map((video, index) => (
-            <div className="col-12 col-md-4 mb-4" key={index}>
-              <div className="card">
-                <div className="card-body">
-                  <iframe
-                    width="100%"
-                    height="200"
-                    src={video}
-                    title={`Video ${index + 1}`}
-                    className="embed-responsive-item"
-                  ></iframe>
+    setCheckedVideos(updatedCheckedVideos);
+
+    // Guardar el estado actualizado en localStorage
+    localStorage.setItem(`dvd-${id}-checked`, JSON.stringify(updatedCheckedVideos));
+  };
+
+  // Función para regresar a la página anterior (lista de DVDs)
+  const goBack = () => {
+    navigate("/");
+  };
+
+  return (
+    <div className="container mt-4">
+      {/* Botón de regreso */}
+      <button
+        onClick={goBack}
+        className="btn btn-primary mb-4"
+      >
+        Regresar a menu principal
+      </button>
+
+      <h1 className="text-center mb-4">{dvd.title}</h1>
+
+      <div className="row">
+        {dvd.videos.map((video, index) => (
+          <div className="col-12 col-md-4 mb-4" key={index}>
+            <div className="card">
+              <div className="card-body">
+                <iframe
+                  width="100%"
+                  height="200"
+                  src={video}
+                  title={`Video ${index + 1}`}
+                  className="embed-responsive-item"
+                ></iframe>
+                <div className="form-check mt-3">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id={`video-${index}`}
+                    checked={checkedVideos.includes(index)}
+                    onChange={() => handleCheckboxChange(index)}
+                  />
+                  <label className="form-check-label" htmlFor={`video-${index}`}>
+                    Marcar como visto
+                  </label>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
-    );
-  };
-  
-  export default DVDPage;
+    </div>
+  );
+};
+
+export default DVDPage;
+
   
