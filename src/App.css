@@ -40,3 +40,23 @@
 .read-the-docs {
   color: #888;
 }
+
+.row{
+  margin: 0;
+}
+
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f7f7f7;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+button {
+  font-size: 1rem;
+  font-weight: bold;
+}

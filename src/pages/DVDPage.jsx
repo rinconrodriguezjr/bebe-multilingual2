@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+/* import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 
 const videoLinks = [
@@ -137,57 +137,118 @@ const dvdTitles = [
 ];
 
 function DVDPage() {
-  const { dvdId } = useParams();
-  const dvdIndex = parseInt(dvdId, 10) - 1;
-  const startIndex = dvdIndex * 15;
-  const endIndex = startIndex + 15;
-  const currentVideos = videoLinks.slice(startIndex, endIndex);
-
-  const [seenVideos, setSeenVideos] = useState(Array(currentVideos.length).fill(false));
-
-  const toggleCheckbox = (index) => {
-    const updatedVideos = [...seenVideos];
-    updatedVideos[index] = !updatedVideos[index];
-    setSeenVideos(updatedVideos);
-  };
-
-  const toggleAll = () => {
-    const isAllSeen = seenVideos.every((seen) => seen);
-    setSeenVideos(Array(currentVideos.length).fill(!isAllSeen));
-  };
-
-  return (
-    <div className="dvd-page">
-      <Link to="/" className="back-link">Volver a la lista de DVDs</Link>
-      <h1>{dvdTitles[dvdIndex]}</h1>
-      <div className="global-checkbox">
-        <input type="checkbox" onChange={toggleAll} checked={seenVideos.every((seen) => seen)} />
-        <label>Marcar/Desmarcar todos los videos</label>
-      </div>
-      <div className="video-grid">
-        {currentVideos.map((link, index) => (
-          <div key={index} className="video-item">
-            <iframe
-              src={link}
-              title={`Video ${index + 1}`}
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="video"
-            />
-            <div className="checkbox-container">
-              <input
-                type="checkbox"
-                checked={seenVideos[index]}
-                onChange={() => toggleCheckbox(index)}
+    const { dvdId } = useParams();
+    const dvdIndex = parseInt(dvdId, 10) - 1;
+    const startIndex = dvdIndex * 15; // Cada DVD tiene 15 videos
+    const endIndex = startIndex + 15;
+    const currentVideos = videoLinks.slice(startIndex, endIndex);
+  
+    const [seenVideos, setSeenVideos] = useState(Array(currentVideos.length).fill(false));
+  
+    const toggleCheckbox = (index) => {
+      const updatedVideos = [...seenVideos];
+      updatedVideos[index] = !updatedVideos[index];
+      setSeenVideos(updatedVideos);
+    };
+  
+    const toggleAll = () => {
+      const isAllSeen = seenVideos.every((seen) => seen);
+      setSeenVideos(Array(currentVideos.length).fill(!isAllSeen));
+    };
+  
+    return (
+      <div className="dvd-page">
+        <Link to="/" className="back-link">Volver a la lista de DVDs</Link>
+        <h1>{dvdTitles[dvdIndex]}</h1>
+        <div className="global-checkbox">
+          <input
+            type="checkbox"
+            onChange={toggleAll}
+            checked={seenVideos.every((seen) => seen)}
+          />
+          <label>Marcar/Desmarcar todos los videos</label>
+        </div>
+        <div className="video-grid">
+          {currentVideos.map((link, index) => (
+            <div key={index} className="video-item">
+              <iframe
+                src={link}
+                title={`Video ${index + 1}`}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="video"
               />
-              <label>Visto</label>
+              <div className="checkbox-container">
+                <input
+                  type="checkbox"
+                  checked={seenVideos[index]}
+                  onChange={() => toggleCheckbox(index)}
+                />
+                <label>Visto</label>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
+  
+  export default DVDPage;
 
-export default DVDPage;
+  */
+ 
+  import React from "react";
+  import { useParams, useNavigate } from "react-router-dom";
+  import { videoData } from "../data/videoData";
+  import "../styles/dvd.css";
+
+  const DVDPage = () => {
+    const { id } = useParams();
+    const navigate = useNavigate(); // Hook para navegar programáticamente
+    const dvd = videoData.find((item) => item.id === parseInt(id));
+  
+    if (!dvd) {
+      return <h1>DVD no encontrado</h1>;
+    }
+  
+    // Función para regresar a la página anterior (lista de DVDs)
+    const goBack = () => {
+      navigate("/");
+    };
+  
+    return (
+      <div className="container mt-4">
+        {/* Botón de regreso */}
+        <button
+          onClick={goBack}
+          className="btn btn-primary mb-4"
+        >
+          Regresar a menu principal
+        </button>
+  
+        <h1 className="text-center mb-4">{dvd.title}</h1>
+  
+        <div className="row">
+          {dvd.videos.map((video, index) => (
+            <div className="col-12 col-md-4 mb-4" key={index}>
+              <div className="card">
+                <div className="card-body">
+                  <iframe
+                    width="100%"
+                    height="200"
+                    src={video}
+                    title={`Video ${index + 1}`}
+                    className="embed-responsive-item"
+                  ></iframe>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+  
+  export default DVDPage;
+  

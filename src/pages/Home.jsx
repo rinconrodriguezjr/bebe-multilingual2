@@ -17,7 +17,7 @@ const dvdTitles = [
 function Home() {
   return (
     <div className="home-container">
-      <h1>Lista de DVDs</h1>
+      <h1>Bebé Políglota</h1>
       <ul className="dvd-list">
         {dvdTitles.map((title, index) => (
           <li key={index} className="dvd-item">

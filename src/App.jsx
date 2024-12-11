@@ -1,18 +1,11 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import DVDPage from './pages/DVDPage';
+import React from "react";
+import AppRouter from "./router/AppRouter";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Ruta principal */}
-        <Route path="/" element={<Home />} />
-        {/* Ruta dinámica para cada DVD */}
-        <Route path="/dvd/:dvdId" element={<DVDPage />} />
-      </Routes>
-    </Router>
+    <div>
+      <AppRouter />
+    </div>
   );
 }
 
